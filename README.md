@@ -1,5 +1,6 @@
 # Yell.com Scraper
 
+## Targets
 1. [x] Scrape Yell.com and save data into CSV (Business Name, Phone No, Address, Website)
 2. [x] Check if Website is up and remove duplicate websites before continuing
 3. [x] Scrape Email from Landing Page of Website using BeautifulSoup (Not works for emails generated from JS)
@@ -10,9 +11,12 @@
 8. [ ] Integrate Facebook scraper
 9. [ ] Create Scraper for other pages mentioned like 
 
-## Some Other Websites to create Scrapers for 
+## Misc. Targets
+1. [ ] Use Proxy Servers in Python to avoid getting blacklisted
+
+### Some Other Websites to create Scrapers for 
+- Thompsons directory (Easy and Contain Emails + Websites)
 - Google 
-- Check a trade
-- Rated people 
-- My builder
-- Thompsons directory
+- Check a trade - Contains no emails (Scraper should Scrape name, website, phone number)
+- (Abandoned) Rated people - (Cannot custom search, need to select from available options)
+- (Requires Proxy) My builder
