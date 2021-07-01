@@ -27,6 +27,7 @@ def transform(articles):
         except:
             tel = ''
 
+        # TODO: Add emails as empty here
         business = {
             'name': name,
             'address': address,

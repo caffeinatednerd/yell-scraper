@@ -13,6 +13,8 @@
 
 ## Misc. Targets
 1. [ ] Use Proxy Servers in Python to avoid getting blacklisted
+2. [ ] Implement timeout based retry when scraping websites
+3. [ ] Add check for & = %26 in yell main.py
 
 ### Some Other Websites to create Scrapers for 
 - Thompsons directory (Easy and Contain Emails + Websites)

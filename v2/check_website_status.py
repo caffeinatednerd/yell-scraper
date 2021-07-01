@@ -88,11 +88,12 @@ for (url, value) in d.items():
 print(d1)
 
 
-df['emails'] = ''
+# df['emails'] = ''
 
-for (url, value) in d1.items():
-    matching_rows = df[df["websites"] == url]
-    matching_rows['emails'] = value
+for (url, emails) in d1.items():
+    emails = ", ".join(emails)
+    # Set emails in df
+    df.loc[df['website'] == url, 'emails'] = emails
 
 print(df)
-df.to_csv(f'{file}.csv', index=False)
+df.to_csv(f'{file}', index=False)
