@@ -2,11 +2,18 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 import time
+from random import randrange
+import urllib.parse
+
+import sys
+sys.path.append('C:\\Users\\Prabhu\\Desktop\\yell-scraper\\v2\\modules')
+from extract_all_emails import extract_all_emails
 
 main_list = []
+headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.70 Safari/537.36'}
+
 
 def extract(url):
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.70 Safari/537.36'}
     r = requests.get(url, headers=headers)
     soup = BeautifulSoup(r.content, 'html.parser')
 
@@ -42,9 +49,8 @@ def num_pages(url):
     to_append = '&pageNum=1'
     url = url + to_append
 
-    print('Final URL:', url)
+    # print('Final URL:', url)
 
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.70 Safari/537.36'}
     r = requests.get(url, headers=headers)
     soup = BeautifulSoup(r.content, 'html.parser')
     articles = soup.find_all('div', class_ = 'col-sm-14 col-md-16 col-lg-14 text-center')
@@ -56,35 +62,62 @@ def num_pages(url):
     n_pages = len(paragraphs[0].splitlines()) - 2
     return n_pages
 
-def save(file):
+def save(file_name):
     df = pd.DataFrame(main_list)
-    df.to_csv(f'{file}.csv', index=False)
+    file_save_path = "C:\\Users\\Prabhu\\Desktop\\yell-scraper\\v2\\saved_files\\yell.com\\no_emails\\" + file_name
+    df.to_csv(file_save_path, index=False)
+    print('Saved file at', file_save_path)
 
 
 def run(keyword, location, save_as):
-    url = f'https://www.yell.com/ucs/UcsSearchAction.do?scrambleSeed=7&keywords={keyword}&location={location}'
+    url = f'https://www.yell.com/ucs/UcsSearchAction.do?scrambleSeed=55525279&keywords={keyword}&location={location}'
 
     n_pages = num_pages(url)
     print('Number of Pages: ', n_pages)
 
-    for x in range(1, n_pages):
-        to_append = '&pageNum={x}'
+    for x in range(1, n_pages + 1):
+        to_append = f'&pageNum={x}'
         cur_url = url + to_append
 
         print(f'Getting page {x}')
+        print("Scraping from:", cur_url)
 
-        articles = extract(url)
+        articles = extract(cur_url)
         transform(articles)
-        time.sleep(5)
+        
+        # randrange gives you an integral value
+        sleep_seconds = randrange(5, 20)
+        print("Sleep for: " + str(sleep_seconds) + " seconds")
+        time.sleep(sleep_seconds)
+        print("Continuing..\n")
 
     save(save_as)
-    print('Saved to CSV')
 
+
+def url_string(keyword, location):
+    keyword = urllib.parse.quote_plus(keyword)
+    location = urllib.parse.quote_plus(location)
+    return keyword, location
+
+def get_file_name(keyword, location):
+    keyword = keyword.replace(" ", "_")
+    location = location.replace(" ", "_")
+
+    return keyword + "-" + location + ".csv"
 
 if __name__ == "__main__":
 
-    keyword = 'Carpenter'
-    location = 'Glasgow'
-    save_as = 'Carpenters_Glasgow'
+    platform = 'yell'
 
-    run(keyword, location, save_as)
+    keyword = 'Pizza Delivery & Takeaway'
+    location = 'Brighton & Hove City Council'
+    file_name = get_file_name(keyword, location)
+
+    keyword, location = url_string(keyword, location)
+
+    run(keyword, location, file_name)
+
+    print("Number of Businesses Stored: ", len(main_list))
+
+    input_file = file_name.replace(".csv", "")
+    extract_all_emails(platform, input_file)

@@ -6,7 +6,7 @@ from collections import deque
 from bs4 import BeautifulSoup
 
 
-def extract_email(url):
+def extract_email_bs4(url):
     # starting url. replace google with your own url.
     starting_url = url
 
@@ -66,7 +66,7 @@ def extract_email(url):
     return emails
 
 
-# emails = extract_email('https://www.qualityjoiners.com/')
+# emails = extract_email_bs4('https://www.qualityjoiners.com/')
 # emails.add("https://www.qualityjoiners.com/")
 
 # emails_string = ", ".join(emails)

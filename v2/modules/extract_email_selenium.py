@@ -10,8 +10,17 @@ class ChromeBrowser(BrowserInterface):
         options = webdriver.ChromeOptions()
         options.add_experimental_option('excludeSwitches', ['enable-logging'])
         options.add_argument("--headless")
+        # options.add_argument("enable-automation")
+        # options.add_argument("--window-size=1920,1080")
+        # options.add_argument("--no-sandbox")
+        # options.add_argument("--disable-extensions")
+        # options.add_argument("--dns-prefetch-disable")
+        # options.add_argument("--disable-gpu")
+        # options.add_argument("enable-features=NetworkServiceInProcess")
+        # options.page_load_strategy = 'normal'
+
         self._driver = webdriver.Chrome(
-            options=options, executable_path="C:\\Users\\Prabhu\\Downloads\\chromedriver.exe",
+            options=options, executable_path="C:\\Users\\Prabhu\\Desktop\\yell-scraper\\v2\\dependencies\\chromedriver.exe",
         )
 
     def close(self):
@@ -39,6 +48,6 @@ def extract_email_selenium(url):
 
     return set(mail_list)
 
-url = 'http://www.kingslandcontracts.co.uk'
-mail_list = extract_email_selenium(url)
-print(mail_list)
+# url = 'http://www.kingslandcontracts.co.uk'
+# mail_list = extract_email_selenium(url)
+# print(mail_list)
