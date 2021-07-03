@@ -1,5 +1,6 @@
 # from extract_emails.browsers import ChromeBrowser
-from extract_emails import EmailExtractor
+# from extract_emails import EmailExtractor, ContactInfoLinkFilter
+import extract_emails
 from extract_emails.browsers import BrowserInterface
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
@@ -19,7 +20,7 @@ class ChromeBrowser(BrowserInterface):
         options.add_argument("--disable-gpu")
         # options.add_argument("enable-features=NetworkServiceInProcess")
         options.add_argument("disable-features=NetworkService")
-        options.page_load_strategy = 'normal'
+        options.page_load_strategy = 'eager'
 
         self._driver = webdriver.Chrome(
             options=options, executable_path="C:\\Users\\Prabhu\\Desktop\\yell-scraper\\v2\\dependencies\\chromedriver.exe",
@@ -33,41 +34,13 @@ class ChromeBrowser(BrowserInterface):
         return self._driver.page_source
 
 
-def extract_email_selenium(url):
+def filter_contact_links(url):
     with ChromeBrowser() as browser:
+        # email_extractor = EmailExtractor(url, browser, depth=1)
+        # ContactInfoLinkFilter.filter(url)
+        contact_links = extract_emails.link_filters.ContactInfoLinkFilter.links(url)
+        return contact_links
 
-        retries = 2
-
-        while True:
-            if(retries <= 0):
-                browser.close()
-                return set()
-            else:            
-                try:
-                    email_extractor = EmailExtractor(url, browser, depth=2)
-                    emails = email_extractor.get_emails()
-                    browser.close()
-                    break
-                except: 
-                    # print(err)
-                    # sleep some sec/min and retry here!
-                    time.sleep(10)
-                    retries -= 1
-                    print('Retrying...Retries Left:', retries)
-                    continue
-
-    mail_list = []
-    for email in emails:
-        mail = email.as_list()[0]
-        mail_list.append(mail)
-        # print(email)
-        # print(type(email))
-        # print(email.as_dict())
-        # print(email.as_list())
-        # print(type(email.as_list()))
-
-    return set(mail_list)
-
-# url = 'http://www.kingslandcontracts.co.uk'
-# mail_list = extract_email_selenium(url)
-# print(mail_list)
+url = ['http://www.qasltd.co.uk']
+mail_list = filter_contact_links(url)
+print(mail_list)

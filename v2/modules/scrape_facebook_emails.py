@@ -42,7 +42,7 @@ def scrape_facebook_emails(url_to_scrape):
     # driver.get('https://www.facebook.com/home.php')
     wait.until(EC.url_changes('https://www.facebook.com/home.php'))
 
-    sleep(10)
+    # sleep(10)
 
     driver.get(url_to_scrape)
     driver.implicitly_wait(10)

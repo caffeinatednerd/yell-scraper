@@ -16,7 +16,6 @@ def working_url(url):
     retries = 5
 
     while True:
-        s = time.time()
         if(retries <= 0):
             break
         else:            
@@ -85,40 +84,48 @@ def extract_all_emails(platform, file):
 
     # Check if website urls are working and filter
     for w in d:
-        # if 'facebook' not in w:
-            print('Checking:', w)
-            if working_url(w):
-                print('Up')
-                d[w] = True
-            else:
-                print('Down')
-                d[w] = False
+        print('Checking:', w)
+        if working_url(w):
+            print('Up')
+            d[w] = True
+        else:
+            print('Down')
+            d[w] = False
 
     print(d)
+    print()
 
     ########################## EXTRACT EMAILS ##############################
 
     # Extract emails of filtered websites using bs4 and selenium (for js based rendering)
     d1 = {}
     for (url, value) in d.items():
-        if value == True:
-            # emails_1 = extract_email_bs4(url)
-            emails_1 = set()
+        if 'facebook' not in w and value == True:
+
+            print("Scraping", url, "for emails using BeautifulSoup")
+            emails_1 = extract_email_bs4(url)
+
+            if len(emails_1) > 0:
+                emails_str = ", ".join(emails_1)
+                print(emails_str)
             
-            emails_2 = extract_email_selenium(url)
+            else:
+                print("Scraping", url, "for emails using Selenium")
+                emails_2 = extract_email_selenium(url)
+                # emails = emails_1.union(emails_2)
+                emails_str = ", ".join(emails_2)
+                print(emails_str)
 
-            # print(emails_1)
-            # print(type(emails_1))
-            # print(emails_2)
-            # print(type(emails_2))
+            d1[url] = emails_str
 
-            emails = emails_1.union(emails_2)
-
-            emails_str = ", ".join(emails)
-
-            print(emails)
-
-            d1[url] = emails
+        # elif 'facebook' in w and value == True:
+        #     print("Scraping on Facebook..")
+        #     try:
+        #         emails = scrape_facebook_emails(url)
+        #         emails_str = ", ".join(emails)
+        #         d1[url] = emails_str
+        #     except:
+        #         print(err)
 
     print(d1)
 
@@ -129,7 +136,7 @@ def extract_all_emails(platform, file):
 
     # Add emails to the correspomding urls in df and save as CSV
     for (url, emails) in d1.items():
-        emails = ", ".join(emails)
+        # emails = ", ".join(emails)
         # Set emails in df
         df.loc[df['website'] == url, 'emails'] = emails
 

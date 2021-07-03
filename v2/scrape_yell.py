@@ -22,7 +22,10 @@ def extract(url):
 def transform(articles):
     for item in articles:
         name = item.find('h2', class_ = 'businessCapsule--name text-h2').text
-        address = item.find('span', {'itemprop': 'address'}).text.strip().replace('\n', '')
+        try:
+            address = item.find('span', {'itemprop': 'address'}).text.strip().replace('\n', '')
+        except:
+            address = ''
         try:
             # website = item.find('a', class_ = 'btn btn-yellow businessCapsule--ctaItem')['href'] 
             # website = item.find_all('a', attrs={'class': 'btn btn-yellow businessCapsule--ctaItem', 'rel': 'nofollow noopener'})['href']
@@ -49,7 +52,7 @@ def num_pages(url):
     to_append = '&pageNum=1'
     url = url + to_append
 
-    # print('Final URL:', url)
+    print('Final URL:', url)
 
     r = requests.get(url, headers=headers)
     soup = BeautifulSoup(r.content, 'html.parser')
@@ -59,7 +62,11 @@ def num_pages(url):
     for x in articles:
         paragraphs.append(str(x))
 
-    n_pages = len(paragraphs[0].splitlines()) - 2
+    if len(paragraphs) == 0:
+        n_pages = 1
+    else:
+        n_pages = len(paragraphs[0].splitlines()) - 2
+
     return n_pages
 
 def save(file_name):
@@ -109,8 +116,8 @@ if __name__ == "__main__":
 
     platform = 'yell'
 
-    keyword = 'Pizza Delivery & Takeaway'
-    location = 'Brighton & Hove City Council'
+    keyword = 'Asbestos Removal'
+    location = 'Ascot'
     file_name = get_file_name(keyword, location)
 
     keyword, location = url_string(keyword, location)

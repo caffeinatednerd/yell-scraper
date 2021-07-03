@@ -202,12 +202,12 @@ if __name__ == "__main__":
 
     platform = "thomson"
 
-    keyword = 'Pizza Delivery & Takeaway'
-    location = 'Brighton & Hove City Council'
+    keyword = 'Asbestos Removal'
+    location = 'Ascot'
     keyword, location = clean_inputs(keyword, location)
     file_name = keyword + "-" + location + '.csv'
 
-    # run(keyword, location, file_name)
+    run(keyword, location, file_name)
 
     print("Number of Businesses Stored: ", len(main_list))
 
